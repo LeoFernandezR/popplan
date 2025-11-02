@@ -1,12 +1,14 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { bookingSchema, type BookingFormData } from '@/app/lib/schemas/booking'
+import { createBookingSchema, type BookingFormData } from '@/app/lib/schemas/booking'
 import { useBookingStore } from '@/app/lib/store'
 import { Button } from '@/app/components/ui/Button'
+import { SuccessMessage } from '@/app/components/ui/SuccessMessage'
 import { cn } from '@/app/lib/utils/cn'
+import { useRouter } from 'next/navigation'
 
 interface BookingFormProps {
   eventId: string
@@ -25,7 +27,10 @@ export function BookingForm({
   onSuccess,
   className,
 }: BookingFormProps) {
-  const { createBooking, creating, error } = useBookingStore()
+  const { createBooking, creating, error, clearError } = useBookingStore()
+  const router = useRouter()
+  const [showSuccess, setShowSuccess] = useState(false)
+  const [successMessage, setSuccessMessage] = useState('')
 
   const {
     register,
@@ -34,7 +39,7 @@ export function BookingForm({
     reset,
     watch,
   } = useForm<BookingFormData>({
-    resolver: zodResolver(bookingSchema),
+    resolver: zodResolver(createBookingSchema(availableTickets)),
     defaultValues: {
       eventId,
       name: '',
@@ -46,10 +51,9 @@ export function BookingForm({
   const watchedTickets = watch('tickets')
 
   const onSubmit = async (data: BookingFormData) => {
-    // Check ticket availability
-    if (data.tickets > availableTickets) {
-      return
-    }
+    // Clear any previous errors
+    clearError()
+    setShowSuccess(false)
 
     const booking = await createBooking({
       eventId: data.eventId,
@@ -59,8 +63,19 @@ export function BookingForm({
     })
 
     if (booking) {
+      setSuccessMessage(
+        `Successfully booked ${booking.tickets} ticket${booking.tickets !== 1 ? 's' : ''} for ${eventTitle}!`
+      )
+      setShowSuccess(true)
       reset()
+      
+      // Call onSuccess callback if provided
       onSuccess?.()
+      
+      // Optionally redirect to dashboard after a delay
+      setTimeout(() => {
+        router.push('/dashboard')
+      }, 2000)
     }
   }
 
@@ -76,6 +91,13 @@ export function BookingForm({
           {availableTickets} ticket{availableTickets !== 1 ? 's' : ''} available
         </p>
       </div>
+
+      {showSuccess && (
+        <SuccessMessage
+          message={successMessage}
+          onClose={() => setShowSuccess(false)}
+        />
+      )}
 
       {error && (
         <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800">
@@ -131,7 +153,15 @@ export function BookingForm({
             type="number"
             min="1"
             max={availableTickets}
-            {...register('tickets', { valueAsNumber: true })}
+            {...register('tickets', {
+              valueAsNumber: true,
+              validate: (value) => {
+                if (value > availableTickets) {
+                  return `Only ${availableTickets} ticket${availableTickets !== 1 ? 's' : ''} available`
+                }
+                return true
+              },
+            })}
             className={cn(
               'w-full rounded-lg border px-4 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20',
               errors.tickets ? 'border-red-500' : 'border-gray-300'
@@ -139,6 +169,11 @@ export function BookingForm({
           />
           {errors.tickets && (
             <p className="mt-1 text-sm text-red-600">{errors.tickets.message}</p>
+          )}
+          {!errors.tickets && availableTickets > 0 && (
+            <p className="mt-1 text-xs text-gray-500">
+              Select between 1 and {availableTickets} ticket{availableTickets !== 1 ? 's' : ''}
+            </p>
           )}
         </div>
       </div>

@@ -190,8 +190,8 @@ export function EventDetail({ event, loading, error, onRetry }: EventDetailProps
                 price={event.price}
                 availableTickets={event.availableTickets}
                 onSuccess={() => {
-                  // Could show success message or redirect
-                  console.log('Booking successful!')
+                  // Success handled within BookingForm component
+                  // It will show success message and redirect to dashboard
                 }}
               />
             </div>
