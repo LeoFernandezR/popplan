@@ -84,10 +84,16 @@ export function BookingForm({
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className={cn('space-y-6', className)}>
+    <form 
+      onSubmit={handleSubmit(onSubmit)} 
+      className={cn('space-y-6', className)}
+      aria-label="Booking form"
+    >
       <div>
-        <h3 className="mb-4 text-lg font-semibold">Book Tickets for {eventTitle}</h3>
-        <p className="mb-4 text-sm text-gray-600">
+        <h3 className="mb-4 text-lg font-semibold" id="booking-form-title">
+          Book Tickets for {eventTitle}
+        </h3>
+        <p className="mb-4 text-sm text-gray-600" aria-live="polite">
           {availableTickets} ticket{availableTickets !== 1 ? 's' : ''} available
         </p>
       </div>
@@ -114,6 +120,8 @@ export function BookingForm({
             id="name"
             type="text"
             {...register('name')}
+            aria-invalid={errors.name ? 'true' : 'false'}
+            aria-describedby={errors.name ? 'name-error' : undefined}
             className={cn(
               'w-full rounded-lg border px-4 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20',
               errors.name ? 'border-red-500' : 'border-gray-300'
@@ -121,7 +129,9 @@ export function BookingForm({
             placeholder="John Doe"
           />
           {errors.name && (
-            <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
+            <p id="name-error" className="mt-1 text-sm text-red-600" role="alert">
+              {errors.name.message}
+            </p>
           )}
         </div>
 
@@ -133,6 +143,8 @@ export function BookingForm({
             id="email"
             type="email"
             {...register('email')}
+            aria-invalid={errors.email ? 'true' : 'false'}
+            aria-describedby={errors.email ? 'email-error' : undefined}
             className={cn(
               'w-full rounded-lg border px-4 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20',
               errors.email ? 'border-red-500' : 'border-gray-300'
@@ -140,7 +152,9 @@ export function BookingForm({
             placeholder="john@example.com"
           />
           {errors.email && (
-            <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+            <p id="email-error" className="mt-1 text-sm text-red-600" role="alert">
+              {errors.email.message}
+            </p>
           )}
         </div>
 
@@ -153,6 +167,8 @@ export function BookingForm({
             type="number"
             min="1"
             max={availableTickets}
+            aria-invalid={errors.tickets ? 'true' : 'false'}
+            aria-describedby={errors.tickets ? 'tickets-error' : 'tickets-help'}
             {...register('tickets', {
               valueAsNumber: true,
               validate: (value) => {
@@ -168,10 +184,12 @@ export function BookingForm({
             )}
           />
           {errors.tickets && (
-            <p className="mt-1 text-sm text-red-600">{errors.tickets.message}</p>
+            <p id="tickets-error" className="mt-1 text-sm text-red-600" role="alert">
+              {errors.tickets.message}
+            </p>
           )}
           {!errors.tickets && availableTickets > 0 && (
-            <p className="mt-1 text-xs text-gray-500">
+            <p id="tickets-help" className="mt-1 text-xs text-gray-500">
               Select between 1 and {availableTickets} ticket{availableTickets !== 1 ? 's' : ''}
             </p>
           )}
@@ -187,7 +205,13 @@ export function BookingForm({
         </div>
       </div>
 
-      <Button type="submit" isLoading={creating} className="w-full" size="lg">
+      <Button 
+        type="submit" 
+        isLoading={creating} 
+        className="w-full" 
+        size="lg"
+        aria-label={creating ? 'Processing booking...' : `Book tickets for ${eventTitle}`}
+      >
         {creating ? 'Processing...' : 'Book Now'}
       </Button>
     </form>

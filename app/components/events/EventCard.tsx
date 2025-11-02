@@ -24,9 +24,13 @@ export function EventCard({ event }: EventCardProps) {
   }
 
   return (
-    <Link href={`/events/${event.id}`} className="h-full">
+    <Link 
+      href={`/events/${event.id}`} 
+      className="h-full"
+      aria-label={`View details for ${event.title} on ${formatDate(event.date)}`}
+    >
       <Card hover className="h-full transition-transform duration-200 hover:scale-[1.02]">
-        <div className="flex flex-col gap-4">
+        <article className="flex flex-col gap-4">
           {/* Event Image */}
           <div className="relative h-48 w-full overflow-hidden rounded-lg bg-gray-200">
             {event.image ? (
@@ -114,7 +118,7 @@ export function EventCard({ event }: EventCardProps) {
               </span>
             </div>
           </div>
-        </div>
+        </article>
       </Card>
     </Link>
   )
