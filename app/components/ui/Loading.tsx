@@ -50,16 +50,58 @@ export function Loading({ size = 'md', text, fullScreen = false }: LoadingProps)
   return <div className="flex items-center justify-center p-8">{spinner}</div>
 }
 
-// Skeleton loader for lists
+// Skeleton loader for event cards
 export function LoadingSkeleton({ count = 3 }: { count?: number }) {
   return (
-    <div className="space-y-4">
+    <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
       {Array.from({ length: count }).map((_, i) => (
         <div
           key={i}
-          className="h-32 animate-pulse rounded-lg bg-gray-200"
-        />
+          className="animate-pulse rounded-lg border border-gray-200 bg-white p-6 shadow-sm"
+        >
+          {/* Image skeleton */}
+          <div className="mb-4 h-48 w-full rounded-lg bg-gray-200" />
+          {/* Title skeleton */}
+          <div className="mb-2 h-6 w-3/4 rounded bg-gray-200" />
+          {/* Subtitle skeleton */}
+          <div className="mb-4 h-4 w-1/2 rounded bg-gray-200" />
+          {/* Info skeleton */}
+          <div className="mb-2 h-4 w-full rounded bg-gray-200" />
+          <div className="mb-4 h-4 w-2/3 rounded bg-gray-200" />
+          {/* Price skeleton */}
+          <div className="flex items-center justify-between">
+            <div className="h-6 w-16 rounded bg-gray-200" />
+            <div className="h-4 w-20 rounded bg-gray-200" />
+          </div>
+        </div>
       ))}
+    </div>
+  )
+}
+
+// Skeleton for event detail page
+export function EventDetailSkeleton() {
+  return (
+    <div className="space-y-8">
+      <div className="animate-pulse">
+        <div className="mb-4 h-10 w-3/4 rounded bg-gray-200" />
+        <div className="h-96 w-full rounded-lg bg-gray-200" />
+      </div>
+      <div className="grid gap-8 lg:grid-cols-3">
+        <div className="lg:col-span-2 space-y-6">
+          <div className="animate-pulse rounded-lg border border-gray-200 bg-white p-6">
+            <div className="mb-4 h-6 w-24 rounded bg-gray-200" />
+            <div className="space-y-2">
+              <div className="h-4 w-full rounded bg-gray-200" />
+              <div className="h-4 w-full rounded bg-gray-200" />
+              <div className="h-4 w-3/4 rounded bg-gray-200" />
+            </div>
+          </div>
+        </div>
+        <div className="animate-pulse rounded-lg border border-gray-200 bg-white p-6">
+          <div className="h-8 w-32 rounded bg-gray-200" />
+        </div>
+      </div>
     </div>
   )
 }

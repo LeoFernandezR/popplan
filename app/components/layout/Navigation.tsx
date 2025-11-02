@@ -18,13 +18,16 @@ function NavLink({ href, children }: NavLinkProps) {
     <Link
       href={href}
       className={cn(
-        'px-3 py-2 text-sm font-medium transition-colors duration-200',
+        'relative px-3 py-2 text-sm font-medium transition-colors duration-200',
         isActive
-          ? 'text-blue-600 border-b-2 border-blue-600'
+          ? 'text-blue-600'
           : 'text-gray-600 hover:text-gray-900'
       )}
     >
       {children}
+      {isActive && (
+        <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-full" />
+      )}
     </Link>
   )
 }

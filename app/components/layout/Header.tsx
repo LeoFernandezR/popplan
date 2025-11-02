@@ -4,9 +4,12 @@ import { Navigation } from './Navigation'
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-50 border-b border-gray-200 bg-white">
+    <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/95 backdrop-blur-sm">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-        <Link href="/" className="text-2xl font-bold text-gray-900">
+        <Link 
+          href="/" 
+          className="text-2xl font-bold text-gray-900 transition-colors hover:text-blue-600"
+        >
           PopPlan
         </Link>
         <Navigation />

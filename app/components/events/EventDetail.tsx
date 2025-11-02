@@ -173,7 +173,7 @@ export function EventDetail({ event, loading, error, onRetry }: EventDetailProps
         {/* Booking Sidebar */}
         <div className="lg:col-span-1">
           <Card>
-            <div className="sticky top-4">
+            <div className="sticky top-24">
               <div className="mb-6 space-y-2">
                 <p className="text-3xl font-bold text-gray-900">
                   {formatPrice(event.price)}
