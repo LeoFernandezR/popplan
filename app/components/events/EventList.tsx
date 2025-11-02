@@ -1,20 +1,28 @@
 'use client'
 
 import React, { useEffect } from 'react'
+import type { Event } from '@/app/lib/types'
 import { useEventStore } from '@/app/lib/store'
 import { EventCard } from './EventCard'
 import { Loading, LoadingSkeleton } from '@/app/components/ui/Loading'
 import { Error } from '@/app/components/ui/Error'
 import { Empty } from '@/app/components/ui/Empty'
 
-export function EventList() {
+interface EventListProps {
+  initialEvents?: Event[]
+}
+
+export function EventList({ initialEvents }: EventListProps) {
   const { events, loading, error, fetchEvents, clearError } = useEventStore()
 
   useEffect(() => {
-    if (events.length === 0 && !loading) {
+    // If initial events provided, set them in store
+    if (initialEvents && initialEvents.length > 0 && events.length === 0) {
+      useEventStore.setState({ events: initialEvents })
+    } else if (events.length === 0 && !loading) {
       fetchEvents()
     }
-  }, [events.length, loading, fetchEvents])
+  }, [events.length, loading, fetchEvents, initialEvents])
 
   if (loading && events.length === 0) {
     return <LoadingSkeleton count={6} />
