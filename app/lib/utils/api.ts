@@ -1,70 +1,85 @@
-import type { ApiError, ApiResponse, HttpStatus } from '@/app/lib/types/api'
-import { NextResponse } from 'next/server'
+import {
+  BookingCreatePayload,
+  BookingCreateResponse,
+  BookingListResponse,
+  EventListResponse,
+} from "../types";
 
-/**
- * Create a successful API response
- */
-export function createSuccessResponse<T>(
-  data: T,
-  status: HttpStatus = 200,
-  message?: string
-): NextResponse<ApiResponse<T>> {
-  return NextResponse.json(
-    {
-      data,
-      message,
-    },
-    { status }
-  )
+export async function fetchBookings(): Promise<BookingListResponse> {
+  const response = await fetch("/api/bookings");
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch bookings: ${response.statusText}`);
+  }
+
+  const result = await response.json();
+
+  if (result.error) {
+    throw new Error(result.error.message || "Failed to fetch bookings");
+  }
+
+  const data: BookingListResponse = result.data;
+
+  return data;
 }
 
-/**
- * Create an error API response
- */
-export function createErrorResponse(
-  error: string | ApiError,
-  status: HttpStatus = 400
-): NextResponse<ApiResponse<never>> {
-  const apiError: ApiError =
-    typeof error === 'string'
-      ? { code: status.toString(), message: error }
-      : error
-
-  return NextResponse.json(
-    {
-      error: apiError,
+export async function createBooking(payload: BookingCreatePayload) {
+  const response = await fetch("/api/bookings", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
     },
-    { status }
-  )
+    body: JSON.stringify(payload),
+  });
+
+  const result = await response.json();
+
+  if (!response.ok || result.error) {
+    throw new Error(
+      result.error?.message ||
+        `Failed to create booking: ${response.statusText}`
+    );
+  }
+
+  const data: BookingCreateResponse = result.data;
+  const newBooking = data.booking;
+  return newBooking;
 }
 
-/**
- * Create a 404 Not Found response
- */
-export function createNotFoundResponse(
-  resource: string = 'Resource'
-): NextResponse<ApiResponse<never>> {
-  return createErrorResponse(
-    {
-      code: '404',
-      message: `${resource} not found`,
-    },
-    404
-  )
+export async function fetchEvents() {
+  const response = await fetch("/api/events");
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch events: ${response.statusText}`);
+  }
+
+  const result = await response.json();
+
+  if (result.error) {
+    throw new Error(result.error.message || "Failed to fetch events");
+  }
+
+  const data: EventListResponse = result.data;
+
+  return data;
 }
 
-/**
- * Create a 500 Internal Server Error response
- */
-export function createInternalErrorResponse(
-  message: string = 'Internal server error'
-): NextResponse<ApiResponse<never>> {
-  return createErrorResponse(
-    {
-      code: '500',
-      message,
-    },
-    500
-  )
-}
+export async function fetchEventById(id: string) {
+  const response = await fetch(`/api/events/${id}`);
 
+  if (!response.ok) {
+    if (response.status === 404) {
+      throw new Error("Event not found");
+    }
+    throw new Error(`Failed to fetch event: ${response.statusText}`);
+  }
+
+  const result = await response.json();
+
+  if (result.error) {
+    throw new Error(result.error.message || "Failed to fetch event");
+  }
+
+  const event = result.data.event;
+  return event;
+}

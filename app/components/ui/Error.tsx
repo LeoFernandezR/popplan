@@ -1,13 +1,17 @@
-import React from 'react'
-import { Button } from './Button'
+import React from "react";
+import { Button } from "./Button";
 
 interface ErrorProps {
-  message: string
-  onRetry?: () => void
-  retryLabel?: string
+  message: string;
+  onRetry?: () => void;
+  retryLabel?: string;
 }
 
-export function Error({ message, onRetry, retryLabel = 'Try Again' }: ErrorProps) {
+export function Error({
+  message,
+  onRetry,
+  retryLabel = "Try Again",
+}: ErrorProps) {
   return (
     <div className="flex flex-col items-center justify-center gap-4 rounded-lg border border-red-200 bg-gradient-to-br from-red-50 to-red-100/50 p-8 text-center shadow-sm">
       <div className="flex flex-col items-center gap-3">
@@ -26,7 +30,9 @@ export function Error({ message, onRetry, retryLabel = 'Try Again' }: ErrorProps
             />
           </svg>
         </div>
-        <p className="text-lg font-semibold text-red-900">Something went wrong</p>
+        <p className="text-lg font-semibold text-red-900">
+          Something went wrong
+        </p>
         <p className="text-sm text-red-700 max-w-md">{message}</p>
       </div>
       {onRetry && (
@@ -35,6 +41,5 @@ export function Error({ message, onRetry, retryLabel = 'Try Again' }: ErrorProps
         </Button>
       )}
     </div>
-  )
+  );
 }
-

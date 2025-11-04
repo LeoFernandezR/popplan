@@ -2,15 +2,19 @@ import {
   createSuccessResponse,
   createErrorResponse,
   createInternalErrorResponse,
-} from '@/app/lib/utils/api'
-import { findEventById, getUserBookings, mockBookings } from '@/app/lib/utils/mock-data'
+} from "@/app/lib/utils/api-response";
+import {
+  findEventById,
+  getUserBookings,
+  mockBookings,
+} from "@/app/lib/utils/mock-data";
 import type {
   BookingCreatePayload,
   BookingListResponse,
   BookingCreateResponse,
   Booking,
   BookingStatus,
-} from '@/app/lib/types/booking'
+} from "@/app/lib/types/booking";
 
 /**
  * GET /api/bookings
@@ -20,18 +24,18 @@ import type {
 export async function GET() {
   try {
     // TODO: Get userId from session/auth
-    const userId = 'user-123'
-    const bookings = getUserBookings(userId)
+    const userId = "user-123";
+    const bookings = getUserBookings(userId);
 
     const response: BookingListResponse = {
       bookings,
       total: bookings.length,
-    }
+    };
 
-    return createSuccessResponse(response)
+    return createSuccessResponse(response);
   } catch (error) {
-    console.error('Error fetching bookings:', error)
-    return createInternalErrorResponse('Failed to fetch bookings')
+    console.error("Error fetching bookings:", error);
+    return createInternalErrorResponse("Failed to fetch bookings");
   }
 }
 
@@ -41,21 +45,24 @@ export async function GET() {
  */
 export async function POST(request: Request) {
   try {
-    const body: BookingCreatePayload = await request.json()
+    const body: BookingCreatePayload = await request.json();
 
     // Validate required fields
     if (!body.eventId || !body.name || !body.email || !body.tickets) {
-      return createErrorResponse('Missing required fields', 400)
+      return createErrorResponse("Missing required fields", 400);
     }
 
     if (body.tickets <= 0) {
-      return createErrorResponse('Number of tickets must be greater than 0', 400)
+      return createErrorResponse(
+        "Number of tickets must be greater than 0",
+        400
+      );
     }
 
     // Find the event
-    const event = findEventById(body.eventId)
+    const event = findEventById(body.eventId);
     if (!event) {
-      return createErrorResponse('Event not found', 404)
+      return createErrorResponse("Event not found", 404);
     }
 
     // Check ticket availability
@@ -63,11 +70,11 @@ export async function POST(request: Request) {
       return createErrorResponse(
         `Only ${event.availableTickets} tickets available`,
         400
-      )
+      );
     }
 
     // TODO: In a real app, get userId from session/auth
-    const userId = 'user-123'
+    const userId = "user-123";
 
     // Create booking
     const booking: Booking = {
@@ -79,14 +86,14 @@ export async function POST(request: Request) {
       eventImage: event.image,
       tickets: body.tickets,
       totalPrice: event.price * body.tickets,
-      status: 'confirmed' as BookingStatus,
+      status: "confirmed" as BookingStatus,
       attendeeInfo: {
         name: body.name,
         email: body.email,
       },
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-    }
+    };
 
     // In a real app, save to database and update event availability
     // For now, we'll just return the booking
@@ -94,19 +101,18 @@ export async function POST(request: Request) {
 
     const response: BookingCreateResponse = {
       booking,
-      message: 'Booking created successfully',
-    }
+      message: "Booking created successfully",
+    };
 
-    return createSuccessResponse(response, 201)
+    return createSuccessResponse(response, 201);
   } catch (error) {
-    console.error('Error creating booking:', error)
-    
+    console.error("Error creating booking:", error);
+
     // Handle JSON parsing errors
     if (error instanceof SyntaxError) {
-      return createErrorResponse('Invalid JSON in request body', 400)
+      return createErrorResponse("Invalid JSON in request body", 400);
     }
 
-    return createInternalErrorResponse('Failed to create booking')
+    return createInternalErrorResponse("Failed to create booking");
   }
 }
-

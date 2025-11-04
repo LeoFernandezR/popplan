@@ -1,73 +1,71 @@
-'use client'
+"use client";
 
-import React, { useEffect, useState } from 'react'
-import type { Event } from '@/app/lib/types'
-import { useEventStore } from '@/app/lib/store'
-import { EventCard } from './EventCard'
-import { EventSearch } from './EventSearch'
-import { Loading, LoadingSkeleton } from '@/app/components/ui/Loading'
-import { Error } from '@/app/components/ui/Error'
-import { Empty } from '@/app/components/ui/Empty'
+import { Empty } from "@/app/components/ui/Empty";
+import { Error } from "@/app/components/ui/Error";
+import { LoadingSkeleton } from "@/app/components/ui/Loading";
+import type { Event } from "@/app/lib/types";
+import { fetchEvents } from "@/app/lib/utils/api";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { EventCard } from "./EventCard";
+import { EventSearch } from "./EventSearch";
 
 interface EventListProps {
-  initialEvents?: Event[]
+  initialEvents?: Event[];
 }
 
 export function EventList({ initialEvents }: EventListProps) {
-  const { events, loading, error, fetchEvents, clearError } = useEventStore()
-  const [displayEvents, setDisplayEvents] = useState<Event[]>(events)
+  const {
+    data: events,
+    isLoading,
+    isError,
+    error,
+    refetch: refetchEvents,
+  } = useQuery({
+    queryKey: ["events"],
+    queryFn: fetchEvents,
+    initialData: initialEvents,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
 
-  useEffect(() => {
-    // If initial events provided, set them in store
-    if (initialEvents && initialEvents.length > 0 && events.length === 0) {
-      useEventStore.setState({ events: initialEvents })
-    } else if (events.length === 0 && !loading) {
-      fetchEvents()
-    }
-  }, [events.length, loading, fetchEvents, initialEvents])
+  const [displayEvents, setDisplayEvents] = useState<Event[]>(events || []);
 
-  // Update display events when store events change
-  useEffect(() => {
-    setDisplayEvents(events)
-  }, [events])
-
-  if (loading && events.length === 0) {
-    return <LoadingSkeleton count={6} />
+  if (isLoading && !events) {
+    return <LoadingSkeleton count={6} />;
   }
 
-  if (error) {
+  if (isError || error) {
     return (
       <Error
-        message={error}
+        message={error.message || "An error occurred while fetching events."}
         onRetry={() => {
-          clearError()
-          fetchEvents()
+          refetchEvents();
         }}
       />
-    )
+    );
   }
 
-  if (events.length === 0 && !loading) {
+  if (!events && !isLoading) {
     return (
       <Empty
         title="No events found"
         description="Check back later for new events."
       />
-    )
+    );
   }
 
   return (
     <div className="space-y-6">
       {/* Search and Filter */}
-      {events.length > 0 && (
-        <EventSearch 
-          events={events} 
+      {events!.length > 0 && (
+        <EventSearch
+          events={events!}
           onFilteredEventsChange={setDisplayEvents}
         />
       )}
 
       {/* Events Grid */}
-      {displayEvents.length === 0 && events.length > 0 ? (
+      {displayEvents.length === 0 ? (
         <Empty
           title="No events match your search"
           description="Try adjusting your search or filters."
@@ -80,6 +78,5 @@ export function EventList({ initialEvents }: EventListProps) {
         </div>
       )}
     </div>
-  )
+  );
 }
-

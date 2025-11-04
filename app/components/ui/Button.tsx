@@ -1,29 +1,33 @@
-import React from 'react'
-import { cn } from '@/app/lib/utils/cn'
+import React from "react";
+import { cn } from "@/app/lib/utils/cn";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost'
-  size?: 'sm' | 'md' | 'lg'
-  isLoading?: boolean
-  children: React.ReactNode
+  variant?: "primary" | "secondary" | "outline" | "ghost";
+  size?: "sm" | "md" | "lg";
+  isLoading?: boolean;
+  children: React.ReactNode;
 }
 
 const variantStyles = {
-  primary: 'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 focus:ring-blue-500 shadow-sm hover:shadow-md transition-all',
-  secondary: 'bg-gray-600 text-white hover:bg-gray-700 active:bg-gray-800 focus:ring-gray-500 shadow-sm hover:shadow-md transition-all',
-  outline: 'border-2 border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 active:bg-gray-100 focus:ring-gray-500 transition-all',
-  ghost: 'text-gray-700 hover:bg-gray-100 active:bg-gray-200 focus:ring-gray-500 transition-all',
-}
+  primary:
+    "bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 focus:ring-blue-500 shadow-sm hover:shadow-md transition-all",
+  secondary:
+    "bg-gray-600 text-white hover:bg-gray-700 active:bg-gray-800 focus:ring-gray-500 shadow-sm hover:shadow-md transition-all",
+  outline:
+    "border-2 border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 active:bg-gray-100 focus:ring-gray-500 transition-all",
+  ghost:
+    "text-gray-700 hover:bg-gray-100 active:bg-gray-200 focus:ring-gray-500 transition-all",
+};
 
 const sizeStyles = {
-  sm: 'px-3 py-1.5 text-sm',
-  md: 'px-4 py-2 text-base',
-  lg: 'px-6 py-3 text-lg',
-}
+  sm: "px-3 py-1.5 text-sm",
+  md: "px-4 py-2 text-base",
+  lg: "px-6 py-3 text-lg",
+};
 
 export function Button({
-  variant = 'primary',
-  size = 'md',
+  variant = "primary",
+  size = "md",
   isLoading = false,
   disabled,
   className,
@@ -33,11 +37,12 @@ export function Button({
   return (
     <button
       className={cn(
-        'inline-flex items-center justify-center rounded-lg font-medium',
-        'transition-colors duration-200',
-        'focus:outline-none focus:ring-2 focus:ring-offset-2',
-        'focus-visible:ring-2 focus-visible:ring-offset-2',
-        'disabled:opacity-50 disabled:cursor-not-allowed',
+        "inline-flex items-center justify-center rounded-lg font-medium",
+        "transition-colors duration-200",
+        "focus:outline-none focus:ring-2 focus:ring-offset-2",
+        "focus-visible:ring-2 focus-visible:ring-offset-2",
+        "disabled:opacity-50 disabled:cursor-not-allowed",
+        "cursor-pointer",
         variantStyles[variant],
         sizeStyles[size],
         className
@@ -69,6 +74,5 @@ export function Button({
       )}
       {children}
     </button>
-  )
+  );
 }
-

@@ -1,18 +1,19 @@
-import { create } from 'zustand'
-import type { User } from '@/app/lib/types'
+import { create } from "zustand";
 
 interface UserState {
-  user: User | null
-  isAuthenticated: boolean
-  loading: boolean
+  user: "Admin" | "Guest" | null;
+  isAuthenticated: boolean;
+  loading: boolean;
 }
 
 interface UserActions {
-  setUser: (user: User | null) => void
-  logout: () => void
+  setUser: (user: UserState["user"]) => void;
+  logout: () => void;
+  loginAsAdmin: () => void;
+  loginAsGuest: () => void;
 }
 
-type UserStore = UserState & UserActions
+type UserStore = UserState & UserActions;
 
 /**
  * Zustand store for managing user/auth state
@@ -25,18 +26,28 @@ export const useUserStore = create<UserStore>((set) => ({
   loading: false,
 
   // Actions
-  setUser: (user: User | null) => {
+  setUser: (user: UserState["user"]) => {
     set({
       user,
       isAuthenticated: !!user,
-    })
+    });
   },
-
+  loginAsAdmin: () => {
+    set({
+      user: "Admin",
+      isAuthenticated: true,
+    });
+  },
+  loginAsGuest: () => {
+    set({
+      user: "Guest",
+      isAuthenticated: true,
+    });
+  },
   logout: () => {
     set({
       user: null,
       isAuthenticated: false,
-    })
+    });
   },
-}))
-
+}));

@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import type { Event } from "@/app/lib/types";
 import { cn } from "@/app/lib/utils/cn";
 
 interface EventSearchProps {
   events: Event[];
-  onFilteredEventsChange?: (filtered: Event[]) => void;
+  onFilteredEventsChange: (filtered: Event[]) => void;
   className?: string;
 }
 
@@ -20,9 +20,7 @@ export function EventSearch({
 
   // Get unique categories
   const categories = useMemo(() => {
-    const cats = events
-      .map((e) => e.category)
-      .filter((cat): cat is string => !!cat);
+    const cats = events.map((e) => e.category);
     return ["all", ...Array.from(new Set(cats))];
   }, [events]);
 
@@ -53,9 +51,9 @@ export function EventSearch({
   }, [events, searchQuery, selectedCategory]);
 
   // Notify parent of filtered events
-  React.useEffect(() => {
-    onFilteredEventsChange?.(filteredEvents);
-  }, [filteredEvents, onFilteredEventsChange]);
+  useEffect(() => {
+    onFilteredEventsChange(filteredEvents);
+  }, [filteredEvents]);
 
   return (
     <div className={cn("space-y-4", className)}>
@@ -70,7 +68,7 @@ export function EventSearch({
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search events by title, description, or location..."
-          className="w-full rounded-lg border border-gray-300 px-4 py-2 pl-10 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+          className="w-full rounded-lg border text-gray-700 border-gray-300 px-4 py-2 pl-10 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
           aria-label="Search events"
         />
         <svg

@@ -2,14 +2,14 @@ import {
   createSuccessResponse,
   createNotFoundResponse,
   createInternalErrorResponse,
-} from '@/app/lib/utils/api'
-import { findEventById } from '@/app/lib/utils/mock-data'
-import type { EventDetailResponse } from '@/app/lib/types/event'
+} from "@/app/lib/utils/api-response";
+import { findEventById } from "@/app/lib/utils/mock-data";
+import type { EventDetailResponse } from "@/app/lib/types/event";
 
 interface RouteContext {
   params: Promise<{
-    id: string
-  }>
+    id: string;
+  }>;
 }
 
 /**
@@ -18,21 +18,20 @@ interface RouteContext {
  */
 export async function GET(_request: Request, { params }: RouteContext) {
   try {
-    const { id } = await params
-    const event = findEventById(id)
+    const { id } = await params;
+    const event = findEventById(id);
 
     if (!event) {
-      return createNotFoundResponse('Event')
+      return createNotFoundResponse("Event");
     }
 
     const response: EventDetailResponse = {
       event,
-    }
+    };
 
-    return createSuccessResponse(response)
+    return createSuccessResponse(response);
   } catch (error) {
-    console.error('Error fetching event:', error)
-    return createInternalErrorResponse('Failed to fetch event')
+    console.error("Error fetching event:", error);
+    return createInternalErrorResponse("Failed to fetch event");
   }
 }
-
