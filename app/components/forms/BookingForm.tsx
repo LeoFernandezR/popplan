@@ -1,18 +1,19 @@
 "use client";
 
-import React, { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@/app/components/ui/Button";
+import { SuccessMessage } from "@/app/components/ui/SuccessMessage";
 import {
   createBookingSchema,
   type BookingFormData,
 } from "@/app/lib/schemas/booking";
-import { Button } from "@/app/components/ui/Button";
-import { SuccessMessage } from "@/app/components/ui/SuccessMessage";
-import { cn } from "@/app/lib/utils/cn";
-import { useRouter } from "next/navigation";
-import { useMutation } from "@tanstack/react-query";
+import { formatPrice } from "@/app/lib/utils";
 import { createBooking } from "@/app/lib/utils/api";
+import { cn } from "@/app/lib/utils/cn";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 interface BookingFormProps {
   eventId: string;
@@ -89,10 +90,6 @@ export function BookingForm({
         router.push("/dashboard");
       }, 2000);
     }
-  };
-
-  const formatPrice = (cents: number) => {
-    return `$${(cents / 100).toFixed(2)}`;
   };
 
   return (

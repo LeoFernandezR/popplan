@@ -2,6 +2,7 @@
 import { Card } from "@/app/components/ui/Card";
 import { useUserStore } from "@/app/lib/store";
 import type { Event } from "@/app/lib/types";
+import { formatDate, formatPrice } from "@/app/lib/utils";
 import { deleteEvent } from "@/app/lib/utils/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
@@ -12,15 +13,6 @@ interface EventCardProps {
 }
 
 export function EventCard({ event }: EventCardProps) {
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      weekday: "short",
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
   const queryClient = useQueryClient();
 
   const { mutateAsync: deleteEventMutate } = useMutation({
@@ -38,10 +30,6 @@ export function EventCard({ event }: EventCardProps) {
     } catch (error) {
       console.error("Error deleting event:", error);
     }
-  };
-
-  const formatPrice = (cents: number) => {
-    return `$${(cents / 100).toFixed(2)}`;
   };
 
   const user = useUserStore((state) => state.user);

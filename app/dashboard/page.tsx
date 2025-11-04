@@ -1,40 +1,37 @@
-import type { Metadata } from 'next'
-import Link from 'next/link'
-import Image from 'next/image'
-import { Card } from '@/app/components/ui/Card'
-import { Loading } from '@/app/components/ui/Loading'
-import { Empty } from '@/app/components/ui/Empty'
-import { getUserBookings } from '@/app/lib/utils/mock-data'
+import { Card } from "@/app/components/ui/Card";
+import { Empty } from "@/app/components/ui/Empty";
+import { getUserBookings } from "@/app/lib/utils/mock-data";
+import type { Metadata } from "next";
+import Image from "next/image";
+import { formatPrice } from "../lib/utils";
 
 export const metadata: Metadata = {
-  title: 'My Bookings - PopPlan',
-  description: 'View your event bookings',
-}
+  title: "My Bookings - PopPlan",
+  description: "View your event bookings",
+};
 
 // SSR: Fetch data on each request
 export default async function DashboardPage() {
   // TODO: In a real app, get userId from session/auth
-  const userId = 'user-123'
-  const bookings = getUserBookings(userId)
+  const userId = "user-123";
+  const bookings = getUserBookings(userId);
 
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
-    return date.toLocaleDateString('en-US', {
-      weekday: 'short',
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    })
-  }
-
-  const formatPrice = (cents: number) => {
-    return `$${(cents / 100).toFixed(2)}`
-  }
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      weekday: "short",
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  };
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 sm:text-4xl">My Bookings</h1>
+        <h1 className="text-3xl font-bold text-gray-900 sm:text-4xl">
+          My Bookings
+        </h1>
         <p className="mt-2 text-gray-600">View all your event bookings</p>
       </div>
 
@@ -117,7 +114,8 @@ export default async function DashboardPage() {
                           />
                         </svg>
                         <span>
-                          {booking.tickets} ticket{booking.tickets !== 1 ? 's' : ''}
+                          {booking.tickets} ticket
+                          {booking.tickets !== 1 ? "s" : ""}
                         </span>
                       </div>
                     </div>
@@ -132,14 +130,15 @@ export default async function DashboardPage() {
                     </div>
                     <span
                       className={`rounded-full px-3 py-1 text-xs font-medium ${
-                        booking.status === 'confirmed'
-                          ? 'bg-green-100 text-green-800'
-                          : booking.status === 'cancelled'
-                            ? 'bg-red-100 text-red-800'
-                            : 'bg-yellow-100 text-yellow-800'
+                        booking.status === "confirmed"
+                          ? "bg-green-100 text-green-800"
+                          : booking.status === "cancelled"
+                          ? "bg-red-100 text-red-800"
+                          : "bg-yellow-100 text-yellow-800"
                       }`}
                     >
-                      {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
+                      {booking.status.charAt(0).toUpperCase() +
+                        booking.status.slice(1)}
                     </span>
                   </div>
                 </div>
@@ -149,6 +148,5 @@ export default async function DashboardPage() {
         </div>
       )}
     </div>
-  )
+  );
 }
-

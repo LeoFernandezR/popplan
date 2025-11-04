@@ -1,47 +1,39 @@
-'use client'
+"use client";
 
-import React from 'react'
-import Image from 'next/image'
-import type { Event } from '@/app/lib/types'
-import { BookingForm } from '@/app/components/forms/BookingForm'
-import { Card } from '@/app/components/ui/Card'
-import { Loading } from '@/app/components/ui/Loading'
-import { Error } from '@/app/components/ui/Error'
+import React from "react";
+import Image from "next/image";
+import type { Event } from "@/app/lib/types";
+import { BookingForm } from "@/app/components/forms/BookingForm";
+import { Card } from "@/app/components/ui/Card";
+import { Loading } from "@/app/components/ui/Loading";
+import { Error } from "@/app/components/ui/Error";
+import { formatDate, formatPrice } from "@/app/lib/utils";
 
 interface EventDetailProps {
-  event: Event | null
-  loading?: boolean
-  error?: string | null
-  onRetry?: () => void
+  event: Event | null;
+  loading?: boolean;
+  error?: string | null;
+  onRetry?: () => void;
 }
 
-export function EventDetail({ event, loading, error, onRetry }: EventDetailProps) {
+export function EventDetail({
+  event,
+  loading,
+  error,
+  onRetry,
+}: EventDetailProps) {
   if (loading) {
-    return <Loading text="Loading event details..." />
+    return <Loading text="Loading event details..." />;
   }
 
   if (error || !event) {
     return (
       <Error
-        message={error || 'Event not found'}
+        message={error || "Event not found"}
         onRetry={onRetry}
         retryLabel="Try Again"
       />
-    )
-  }
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
-    return date.toLocaleDateString('en-US', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    })
-  }
-
-  const formatPrice = (cents: number) => {
-    return `$${(cents / 100).toFixed(2)}`
+    );
   }
 
   return (
@@ -89,13 +81,17 @@ export function EventDetail({ event, loading, error, onRetry }: EventDetailProps
           <Card>
             <div className="space-y-4">
               <h2 className="text-2xl font-semibold text-gray-900">About</h2>
-              <p className="text-gray-700 leading-relaxed">{event.description}</p>
+              <p className="text-gray-700 leading-relaxed">
+                {event.description}
+              </p>
             </div>
           </Card>
 
           {/* Event Details */}
           <Card>
-            <h2 className="mb-4 text-2xl font-semibold text-gray-900">Event Details</h2>
+            <h2 className="mb-4 text-2xl font-semibold text-gray-900">
+              Event Details
+            </h2>
             <div className="space-y-4">
               <div className="flex items-start gap-3">
                 <svg
@@ -112,7 +108,9 @@ export function EventDetail({ event, loading, error, onRetry }: EventDetailProps
                   />
                 </svg>
                 <div>
-                  <p className="font-medium text-gray-900">{formatDate(event.date)}</p>
+                  <p className="font-medium text-gray-900">
+                    {formatDate(event.date)}
+                  </p>
                   <p className="text-sm text-gray-600">{event.time}</p>
                 </div>
               </div>
@@ -138,9 +136,12 @@ export function EventDetail({ event, loading, error, onRetry }: EventDetailProps
                   />
                 </svg>
                 <div>
-                  <p className="font-medium text-gray-900">{event.location.name}</p>
+                  <p className="font-medium text-gray-900">
+                    {event.location.name}
+                  </p>
                   <p className="text-sm text-gray-600">
-                    {event.location.address}, {event.location.city}, {event.location.country}
+                    {event.location.address}, {event.location.city},{" "}
+                    {event.location.country}
                   </p>
                 </div>
               </div>
@@ -162,7 +163,9 @@ export function EventDetail({ event, loading, error, onRetry }: EventDetailProps
                   </svg>
                   <div>
                     <p className="font-medium text-gray-900">Organized by</p>
-                    <p className="text-sm text-gray-600">{event.organizer.name}</p>
+                    <p className="text-sm text-gray-600">
+                      {event.organizer.name}
+                    </p>
                   </div>
                 </div>
               )}
@@ -180,7 +183,8 @@ export function EventDetail({ event, loading, error, onRetry }: EventDetailProps
                 </p>
                 <p className="text-sm text-gray-600">per ticket</p>
                 <p className="text-sm text-gray-500">
-                  {event.availableTickets} ticket{event.availableTickets !== 1 ? 's' : ''} available
+                  {event.availableTickets} ticket
+                  {event.availableTickets !== 1 ? "s" : ""} available
                 </p>
               </div>
 
@@ -199,6 +203,5 @@ export function EventDetail({ event, loading, error, onRetry }: EventDetailProps
         </div>
       </div>
     </div>
-  )
+  );
 }
-
