@@ -4,9 +4,9 @@ import {
   createInternalErrorResponse,
 } from "@/app/lib/utils/api-response";
 import {
+  addBooking,
   findEventById,
   getUserBookings,
-  mockBookings,
 } from "@/app/lib/utils/mock-data";
 import type {
   BookingCreatePayload,
@@ -97,7 +97,7 @@ export async function POST(request: Request) {
 
     // In a real app, save to database and update event availability
     // For now, we'll just return the booking
-    // mockBookings.push(booking) // Uncomment if you want to persist in mock data
+    addBooking(booking);
 
     const response: BookingCreateResponse = {
       booking,

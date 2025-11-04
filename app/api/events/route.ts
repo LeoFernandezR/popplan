@@ -13,10 +13,7 @@ export async function GET() {
   try {
     const events = getAllEvents();
 
-    const response: EventListResponse = {
-      events,
-      total: events.length,
-    };
+    const response: EventListResponse = events;
 
     return createSuccessResponse(response);
   } catch (error) {

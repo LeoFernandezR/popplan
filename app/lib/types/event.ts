@@ -24,5 +24,9 @@ export interface Event {
   updatedAt: string;
 }
 
+export type EventDeletePayload = {
+  eventId: string;
+};
+
 export type EventListResponse = Event[];
 export type EventDetailResponse = Event;

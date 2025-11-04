@@ -4,6 +4,7 @@ interface UserState {
   user: "Admin" | "Guest" | null;
   isAuthenticated: boolean;
   loading: boolean;
+  isAdmin: boolean;
 }
 
 interface UserActions {
@@ -24,6 +25,7 @@ export const useUserStore = create<UserStore>((set) => ({
   user: null,
   isAuthenticated: false,
   loading: false,
+  isAdmin: false,
 
   // Actions
   setUser: (user: UserState["user"]) => {
@@ -36,6 +38,7 @@ export const useUserStore = create<UserStore>((set) => ({
     set({
       user: "Admin",
       isAuthenticated: true,
+      isAdmin: true,
     });
   },
   loginAsGuest: () => {

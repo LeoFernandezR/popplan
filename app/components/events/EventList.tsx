@@ -28,6 +28,8 @@ export function EventList({ initialEvents }: EventListProps) {
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
+  console.log(events);
+
   const [displayEvents, setDisplayEvents] = useState<Event[]>(events || []);
 
   if (isLoading && !events) {

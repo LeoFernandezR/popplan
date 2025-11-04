@@ -64,6 +64,25 @@ export async function fetchEvents() {
   return data;
 }
 
+export async function deleteEvent(id: string) {
+  const response = await fetch(`/api/events/${id}`, {
+    method: "DELETE",
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to delete event: ${response.statusText}`);
+  }
+
+  const result = await response.json();
+
+  if (result.error) {
+    throw new Error(result.error.message || "Failed to delete event");
+  }
+  const data: EventListResponse = result.data;
+
+  return data;
+}
+
 export async function fetchEventById(id: string) {
   const response = await fetch(`/api/events/${id}`);
 
